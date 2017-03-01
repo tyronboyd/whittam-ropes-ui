@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<title>COMET</title>
+<title>Whittam-Ropes</title>
 <base href="/">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta charset="utf-8" />
@@ -32,15 +32,6 @@
     System.import('app').catch(function(err){ console.error(err); });
 </script>
 
-<!-- Integrate new Relic -->
-<script type="text/javascript">
-<!-- only runs if new relic agent is installed in this machine -->
-    if(typeof newrelic !== 'undefined'){
-        newrelic.setCustomAttribute ('screenHeight', screen.height);
-        newrelic.setCustomAttribute ('screenWidth', screen.width);
-    }
-</script>
-
 <script src="js/util.js"></script>
 
 <link id="css-loader" rel="stylesheet" />
@@ -55,7 +46,7 @@ $(document).ready(function() {
 </head>
 
 <body>
-	<div class="comet-app">
+	<div class="whittam-ropes-app">
 		<div class="auto-margin fill">
 			<app></app>
 		</div>
