@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "rootDir" : "src/main/typescript",
+    "outDir": "src/main/webapp/distjs/src",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": false
+  },
+  "exclude": [
+        "node_modules",
+        "wwwroot",
+        "src/main/resources",
+        "src/test",
+        "target"
+    ]
+}

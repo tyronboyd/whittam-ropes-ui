@@ -1,0 +1,4 @@
+{
+  "port": 8002,
+  "server": { "baseDir": "./src/main/webapp" }
+}
