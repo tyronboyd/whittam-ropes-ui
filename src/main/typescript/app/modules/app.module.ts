@@ -12,9 +12,7 @@ import { HomeComponent } from '../components/home.component';
 
 @NgModule({
     imports: [  BrowserModule,
-                FormsModule,
                 RouterModule.forRoot(routes),
-                HttpModule,
                 TranslateModule.forRoot({
                     provide: TranslateLoader,
                     useFactory: (http: Http) => new TranslateStaticLoader(http, '/assets/i18n', '.json'),

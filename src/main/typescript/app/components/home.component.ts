@@ -6,5 +6,16 @@ import { Component } from '@angular/core';
 })
 
 export class HomeComponent {
+    barcode: string;
+
     constructor() { }
+
+ ngOnInit() { }
+
+ onKey() {
+   console.log(event);
+    // this.barcode = event.target.value;
+ }
+
+
 }
