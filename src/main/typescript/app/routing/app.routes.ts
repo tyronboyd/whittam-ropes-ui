@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
+import { OrderComponent } from '../components/order.component';
 import { HomeComponent } from '../components/home.component';
 
-export const routes: Routes = [{
-        path: 'home', component: HomeComponent, canActivate: [], children: []},
+
+
+export const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  { path: 'orders', component: OrderComponent }
 ];

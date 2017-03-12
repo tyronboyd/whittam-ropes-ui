@@ -11,9 +11,6 @@ export class SecureHttpService {
     }
 
     getWithHeaders(url: string, queryParams: URLSearchParams, headers: Headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
         let requestOptionsArgs = {
             search: queryParams,
             headers: headers
@@ -37,18 +34,13 @@ export class SecureHttpService {
     }
 
     postWithHeaders(url: string, bodyJson: string, headers: Headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
-
         let options = new RequestOptions({ headers: headers });
-
         return this.http.post(url, bodyJson, options)
             .map((res) => {
-                return res.json();
+                return res;
             })
             .catch((err: Response, caught: Observable<Object>) => {
-            
+
                 return Observable.throw(err);
             });
     }
@@ -58,10 +50,6 @@ export class SecureHttpService {
     }
 
     deleteWithHeaders(url: string, queryParams: URLSearchParams, bodyJson: string, headers: Headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
-
         let requestOptionsArgs = {
             search: queryParams,
             headers: headers,
@@ -82,9 +70,6 @@ export class SecureHttpService {
     }
 
     putWithHeaders(url: string, queryParams: URLSearchParams, bodyJson: string, headers: Headers) {
-      if (!headers.has('Authorization')) {
-          headers.append('Authorization', localStorage.getItem('auth_token'));
-      }
       let options = new RequestOptions({ headers: headers, search: queryParams });
       return this.http.put(url, bodyJson, options)
       .map((res) => {
@@ -96,10 +81,6 @@ export class SecureHttpService {
     }
 
     patchWithHeaders(url: string, bodyJson: string, headers: Headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
-
         let options = new RequestOptions({ headers: headers });
 
         return this.http.patch(url, bodyJson, options)

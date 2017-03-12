@@ -1,0 +1,12 @@
+<div class="order-list col-md-12">
+  <h4>List of current orders</h4>
+  <p>Number of orders: {{orders.length}}</p>
+  <div class="table-heading col-md-4">Item ID</div>
+  <div class="table-heading col-md-4">Title</div>
+  <div class="table-heading col-md-4">Quantity</div>
+  <div *ngFor="let order of orders">
+    <div class="table-value col-md-4">{{order.itemId}}</div>
+    <div class="table-value col-md-4">{{order.title}}</div>
+    <div class="table-value col-md-4">{{order.quantity}}</div>
+  </div>
+</div>

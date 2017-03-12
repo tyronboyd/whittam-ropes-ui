@@ -1,4 +1,32 @@
 <div id="home">
-<input type="text" (keyup)="onKey()" autofocus />
-<p>barcode: {{ barcode }}</p>
+  <div class="logo-main"></div>
+  <div class="current-inventory col-md-12">
+    <h4>Current Inventory</h4>
+    <select (change)="onchange($event)">
+      <option>Please select an item</option>
+      <option *ngFor="let item of inventory" [(value)]="item.id">{{item.title}}</option>
+    </select>
+  </div>
+  <div class="form-group container-fluid">
+    <label for="example-text-input" class="col-md-2 col-form-label">Barcode</label>
+    <div class="col-md-10">
+      <input #barcodes class="form-control" type="text" [value]="barcode"/>
+    </div>
+    <label for="example-text-input" class="col-md-2  col-form-label">ItemId</label>
+    <div class="col-md-10">
+      <input #itemIds class="form-control" type="text"[value]="itemId" />
+    </div>
+    <label for="example-text-input" class="col-md-2  col-form-label">Title</label>
+    <div class="col-md-10">
+      <input #titles class="form-control" type="text" [value]="title"/>
+    </div>
+    <label for="example-text-input" class="col-md-2  col-form-label">Quantity</label>
+    <div class="col-md-10">
+      <input #quantitys  class="form-control" type="text" [value]="quantity"/>
+    </div>
+    <div class="button col-md-8">
+      <button (click)="saveOrder(barcodes.value, itemIds.value, titles.value, quantitys.value)">Add</button>
+    </div>
+  </div>
+  <orders></orders>
 </div>

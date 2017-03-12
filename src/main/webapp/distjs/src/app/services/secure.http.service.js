@@ -20,9 +20,6 @@ var SecureHttpService = (function () {
         return this.getWithHeaders(url, queryParams, new http_1.Headers());
     };
     SecureHttpService.prototype.getWithHeaders = function (url, queryParams, headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
         var requestOptionsArgs = {
             search: queryParams,
             headers: headers
@@ -43,13 +40,10 @@ var SecureHttpService = (function () {
         return this.postWithHeaders(url, bodyJson, new http_1.Headers());
     };
     SecureHttpService.prototype.postWithHeaders = function (url, bodyJson, headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(url, bodyJson, options)
             .map(function (res) {
-            return res.json();
+            return res;
         })
             .catch(function (err, caught) {
             return Rx_1.Observable.throw(err);
@@ -59,9 +53,6 @@ var SecureHttpService = (function () {
         return this.deleteWithHeaders(url, queryParams, bodyJson, new http_1.Headers());
     };
     SecureHttpService.prototype.deleteWithHeaders = function (url, queryParams, bodyJson, headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
         var requestOptionsArgs = {
             search: queryParams,
             headers: headers,
@@ -78,9 +69,6 @@ var SecureHttpService = (function () {
         return this.putWithHeaders(url, queryParams, bodyJson, new http_1.Headers());
     };
     SecureHttpService.prototype.putWithHeaders = function (url, queryParams, bodyJson, headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
         var options = new http_1.RequestOptions({ headers: headers, search: queryParams });
         return this.http.put(url, bodyJson, options)
             .map(function (res) {
@@ -90,9 +78,6 @@ var SecureHttpService = (function () {
         });
     };
     SecureHttpService.prototype.patchWithHeaders = function (url, bodyJson, headers) {
-        if (!headers.has('Authorization')) {
-            headers.append('Authorization', localStorage.getItem('auth_token'));
-        }
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.patch(url, bodyJson, options)
             .map(function (res) {

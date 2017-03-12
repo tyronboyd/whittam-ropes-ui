@@ -9,12 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var http_1 = require("@angular/http");
+var forms_1 = require("@angular/forms");
 var router_1 = require("@angular/router");
 var ng2_translate_1 = require("ng2-translate/ng2-translate");
+var order_component_1 = require("../components/order.component");
 var app_routes_1 = require("../routing/app.routes");
 ;
 var app_component_1 = require("../components/app.component");
 var home_component_1 = require("../components/home.component");
+var order_service_1 = require("../services/order.service");
+var inventory_service_1 = require("../services/inventory.service");
+var secure_http_service_1 = require("../services/secure.http.service");
+var websocket_service_1 = require("../services/websocket.service");
+var chat_service_1 = require("../services/chat.service");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -29,9 +36,10 @@ AppModule = __decorate([
                 useFactory: function (http) { return new ng2_translate_1.TranslateStaticLoader(http, '/assets/i18n', '.json'); },
                 deps: [http_1.Http]
             }),
+            forms_1.FormsModule
         ],
-        declarations: [app_component_1.AppComponent, home_component_1.HomeComponent],
-        providers: [ng2_translate_1.TranslateService],
+        declarations: [app_component_1.AppComponent, home_component_1.HomeComponent, order_component_1.OrderComponent],
+        providers: [ng2_translate_1.TranslateService, order_service_1.OrderService, secure_http_service_1.SecureHttpService, inventory_service_1.InventoryService, websocket_service_1.WebsocketService, chat_service_1.ChatService],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);
