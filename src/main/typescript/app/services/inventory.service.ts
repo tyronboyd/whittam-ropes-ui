@@ -17,15 +17,27 @@ export class InventoryService {
     return this.http.postWithHeaders(Constants.WHITTAM_REST_URL + 'save/inventory', inventory, null);
   }
 
+  saveAllInventory(inventory) {
+    return this.http.postWithHeaders(Constants.WHITTAM_REST_URL + 'saveAll/inventory', inventory, null);
+  }
+
   fetchInventory() {
     return this.http.getWithHeaders(Constants.WHITTAM_REST_URL + 'inventory', null, null);
+  }
+
+  deleteInventory(order) {
+    return this.http.deleteWithHeaders(Constants.WHITTAM_REST_URL + 'delete/inventory', null, order, null);
+  }
+
+  deleteAllInventory() {
+    return this.http.deleteWithHeaders(Constants.WHITTAM_REST_URL + 'delete-all/inventory', null, null, null);
   }
 
   getInventory() {
     return this.inventory.getValue();
   }
 
-  setOrder(inventory) {
+  setInventory(inventory) {
    this.inventory.next(inventory);
   }
 }

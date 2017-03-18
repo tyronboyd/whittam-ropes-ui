@@ -22,13 +22,22 @@ var InventoryService = (function () {
     InventoryService.prototype.saveInventory = function (inventory) {
         return this.http.postWithHeaders(constants_1.Constants.WHITTAM_REST_URL + 'save/inventory', inventory, null);
     };
+    InventoryService.prototype.saveAllInventory = function (inventory) {
+        return this.http.postWithHeaders(constants_1.Constants.WHITTAM_REST_URL + 'saveAll/inventory', inventory, null);
+    };
     InventoryService.prototype.fetchInventory = function () {
         return this.http.getWithHeaders(constants_1.Constants.WHITTAM_REST_URL + 'inventory', null, null);
+    };
+    InventoryService.prototype.deleteInventory = function (order) {
+        return this.http.deleteWithHeaders(constants_1.Constants.WHITTAM_REST_URL + 'delete/inventory', null, order, null);
+    };
+    InventoryService.prototype.deleteAllInventory = function () {
+        return this.http.deleteWithHeaders(constants_1.Constants.WHITTAM_REST_URL + 'delete-all/inventory', null, null, null);
     };
     InventoryService.prototype.getInventory = function () {
         return this.inventory.getValue();
     };
-    InventoryService.prototype.setOrder = function (inventory) {
+    InventoryService.prototype.setInventory = function (inventory) {
         this.inventory.next(inventory);
     };
     return InventoryService;

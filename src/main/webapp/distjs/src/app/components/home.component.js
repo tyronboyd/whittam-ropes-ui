@@ -13,8 +13,10 @@ var core_1 = require("@angular/core");
 var order_service_1 = require("../services/order.service");
 var inventory_service_1 = require("../services/inventory.service");
 var order_1 = require("../models/order");
+var chat_service_1 = require("../services/chat.service");
 var HomeComponent = (function () {
-    function HomeComponent(inventoryService, orderService) {
+    function HomeComponent(chatService, inventoryService, orderService) {
+        this.chatService = chatService;
         this.inventoryService = inventoryService;
         this.orderService = orderService;
         this.barcode = '';
@@ -22,6 +24,8 @@ var HomeComponent = (function () {
         this.itemId = '';
         this.quantity = 0;
         this.fetchCount = 0;
+        this.inventoryData = [];
+        this.status = "Incomplete";
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -29,9 +33,10 @@ var HomeComponent = (function () {
             _this.orders = orders;
         });
         this.fetchInventory();
-    };
-    HomeComponent.prototype.onKey = function (event) {
-        this.barcode = event.target.value;
+        // Fetch orders for each computer
+        this.chatService.messages.subscribe(function (msg) {
+            _this.fetchOrders();
+        });
     };
     HomeComponent.prototype.saveOrder = function (barcode, itemId, title, quantity) {
         var _this = this;
@@ -40,6 +45,7 @@ var HomeComponent = (function () {
             order.barcode = barcode;
             order.itemId = itemId;
             order.title = title;
+            order.status = this.status;
             order.quantity = parseInt(quantity, 10);
             this.orderService.saveOrder(order).subscribe(function (savedOrder) {
                 _this.orderService.setOrder(_this.orders);
@@ -67,6 +73,7 @@ var HomeComponent = (function () {
         var _this = this;
         this.inventoryService.fetchInventory().subscribe(function (inventory) {
             _this.inventory = inventory;
+            console.log(_this.inventory);
         }, function (err) {
             console.log("there was an error:" + err);
         });
@@ -82,14 +89,79 @@ var HomeComponent = (function () {
             }
         }
     };
+    HomeComponent.prototype.fileChangeEvent = function (event) {
+        var _this = this;
+        var fileList = event.target.files;
+        if (fileList.length > 0) {
+            var file_1 = fileList[0];
+            var data_1 = null;
+            var reader_1 = new FileReader();
+            reader_1.onload = function () {
+                var csvData = reader_1.result;
+                data_1 = $.csv.toObjects(csvData);
+                for (var i = 0; i < data_1.length; i++) {
+                    _this.inventoryData.push({
+                        barcode: data_1[i].BARCODE,
+                        title: data_1[i].TITLE,
+                        uniqueId: data_1[i].UNIQUEID
+                    });
+                }
+                _this.saveAllInventory(_this.inventoryData);
+            };
+            reader_1.readAsText(file_1);
+            reader_1.onerror = function () {
+                alert('Unable to read ' + file_1);
+            };
+        }
+    };
+    HomeComponent.prototype.saveAllInventory = function (inventory) {
+        var _this = this;
+        this.inventoryService.saveAllInventory(inventory).subscribe(function (inventory) {
+            console.log('saved inventory');
+            _this.fetchInventory();
+        }, function (err) {
+            console.log("there was an error:" + err);
+        });
+    };
+    HomeComponent.prototype.saveInventory = function (inventory) {
+        var _this = this;
+        this.inventoryService.saveInventory(inventory).subscribe(function (inventory) {
+            console.log('saved inventory');
+            _this.fetchInventory();
+        }, function (err) {
+            console.log("there was an error:" + err);
+        });
+    };
+    HomeComponent.prototype.deleteInventory = function () {
+        var _this = this;
+        this.inventoryService.deleteAllInventory().subscribe(function (inventory) {
+            console.log('deleted all inventory');
+            _this.fetchInventory();
+        }, function (err) {
+            console.log("there was an error:" + err);
+        });
+    };
+    HomeComponent.prototype.deleteOrders = function () {
+        var _this = this;
+        this.orderService.deleteAllOrders().subscribe(function (inventory) {
+            console.log('deleted all orders');
+            _this.fetchOrders();
+        }, function (err) {
+            console.log("there was an error:" + err);
+        });
+    };
     return HomeComponent;
 }());
+__decorate([
+    core_1.ViewChild('fileInput'),
+    __metadata("design:type", core_1.ElementRef)
+], HomeComponent.prototype, "inputEl", void 0);
 HomeComponent = __decorate([
     core_1.Component({
         selector: 'home',
         templateUrl: 'views/home.html'
     }),
-    __metadata("design:paramtypes", [inventory_service_1.InventoryService, order_service_1.OrderService])
+    __metadata("design:paramtypes", [chat_service_1.ChatService, inventory_service_1.InventoryService, order_service_1.OrderService])
 ], HomeComponent);
 exports.HomeComponent = HomeComponent;
 //# sourceMappingURL=home.component.js.map

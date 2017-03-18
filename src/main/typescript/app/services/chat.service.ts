@@ -6,7 +6,7 @@ import { WebsocketService } from './websocket.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 
-const CHAT_URL = 'ws://localhost:8080/whittam-ropes/order-added';
+const CHAT_URL = 'ws://10.0.0.84:8080/whittam-ropes/order-added';
 
 @Injectable()
 export class ChatService {

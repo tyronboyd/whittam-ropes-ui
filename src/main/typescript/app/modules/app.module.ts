@@ -9,11 +9,13 @@ import { OrderComponent } from '../components/order.component';
 import { routes } from '../routing/app.routes';;
 import { AppComponent } from '../components/app.component';
 import { HomeComponent } from '../components/home.component';
+import { CompleteOrdersComponent } from '../components/complete.orders.component';
 import { OrderService } from '../services/order.service';
 import { InventoryService } from '../services/inventory.service';
 import { SecureHttpService } from '../services/secure.http.service';
 import { WebsocketService } from '../services/websocket.service';
 import { ChatService } from '../services/chat.service';
+import { SearchInventoryPipe } from '../pipes/search.inventory.pipe';
 
 @NgModule({
     imports: [  BrowserModule,
@@ -26,7 +28,7 @@ import { ChatService } from '../services/chat.service';
                 FormsModule
     ],
 
-    declarations: [ AppComponent, HomeComponent, OrderComponent],
+    declarations: [ AppComponent, HomeComponent, OrderComponent, SearchInventoryPipe, CompleteOrdersComponent],
 
     providers: [ TranslateService, OrderService, SecureHttpService, InventoryService, WebsocketService, ChatService ],
 

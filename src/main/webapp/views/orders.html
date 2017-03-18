@@ -1,12 +1,40 @@
 <div class="order-list col-md-12">
+  <input [(ngModel)]="inputValue" class="input-barcode" type="text" (keyup)="processBarcode($event.target.value)" autofocus/>
   <h4>List of current orders</h4>
-  <p>Number of orders: {{orders.length}}</p>
-  <div class="table-heading col-md-4">Item ID</div>
-  <div class="table-heading col-md-4">Title</div>
-  <div class="table-heading col-md-4">Quantity</div>
-  <div *ngFor="let order of orders">
-    <div class="table-value col-md-4">{{order.itemId}}</div>
-    <div class="table-value col-md-4">{{order.title}}</div>
-    <div class="table-value col-md-4">{{order.quantity}}</div>
-  </div>
+  <p *ngIf="!isOnOrdersPage">Number of total orders: {{orders.length}}</p>
+  <hr *ngIf="orders.length === 0">
+  <table class="table">
+    <h3 class="no-orders-heading" *ngIf="orders.length === 0">There are no orders to display...</h3>
+    <tr *ngIf="orders.length > 0">
+      <td class="table-heading">Item Code</td>
+      <td class="table-heading">Title</td>
+      <td class="table-heading">Quantity</td>
+      <td class="table-heading">Status</td>
+      <ng-container *ngIf="!isOnOrdersPage">
+      <td class="table-heading col-md-3"></td>
+      </ng-container>
+    </tr>
+    <tr *ngFor="let order of orders">
+      <ng-container *ngIf="order.status == 'Incomplete' && isOnOrdersPage && !isOnCompletedOrders">
+        <td class="table-value-orders">{{order.itemId}}</td>
+        <td class="table-value-orders">{{order.title}}</td>
+        <td class="table-value-orders">{{order.quantity}}</td>
+        <td class="table-value-orders">{{order.status}}</td>
+      </ng-container>
+      <ng-container *ngIf="!isOnOrdersPage && !isOnCompletedOrders">
+        <td class="table-value">{{order.itemId}}</td>
+        <td class="table-value">{{order.title}}</td>
+        <td class="table-value">{{order.quantity}}</td>
+        <td class="table-value">{{order.status}}</td>
+        <td class="table-value"><button class="table-value-button" (click)="deleteOrder(order)">Delete</button></td>
+      </ng-container>
+      <ng-container *ngIf="order.status == 'Complete' && isOnCompletedOrders">
+        <td class="table-value">{{order.itemId}} test</td>
+        <td class="table-value">{{order.title}}</td>
+        <td class="table-value">{{order.quantity}}</td>
+        <td class="table-value">{{order.status}}</td>
+        <td class="table-value"><button class="table-value-button" (click)="deleteOrder(order)">Delete</button></td>
+      </ng-container>
+    </tr>
+  </table>
 </div>

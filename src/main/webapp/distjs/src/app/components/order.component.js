@@ -10,16 +10,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var router_1 = require("@angular/router");
 var order_service_1 = require("../services/order.service");
 var chat_service_1 = require("../services/chat.service");
 var websocket_service_1 = require("../services/websocket.service");
 var constants_1 = require("../util/constants");
 var OrderComponent = (function () {
-    function OrderComponent(chatService, orderService, webSocketService) {
+    function OrderComponent(route, chatService, orderService, webSocketService) {
+        this.route = route;
         this.chatService = chatService;
         this.orderService = orderService;
         this.webSocketService = webSocketService;
         this.messages = [];
+        this.inputValue = '';
+        this.isOnOrdersPage = false;
+        this.isOnCompletedOrders = false;
+        if (this.route.snapshot.url[0].path === 'orders') {
+            this.isOnOrdersPage = true;
+        }
+        else if (this.route.snapshot.url[0].path === 'complete-orders') {
+            this.isOnCompletedOrders = true;
+        }
     }
     OrderComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -42,6 +53,37 @@ var OrderComponent = (function () {
             console.log("there was an error:" + err);
         });
     };
+    OrderComponent.prototype.deleteOrder = function (order) {
+        var _this = this;
+        this.orderService.deleteOrder(order).subscribe(function (order) {
+            console.log('order deleted:' + order);
+            _this.inputValue = '';
+        }, function (err) {
+            console.log("there was an error:" + err);
+        });
+    };
+    OrderComponent.prototype.updateOrder = function (id, status) {
+        var _this = this;
+        this.orderService.updateOrder(id, status).subscribe(function (order) {
+            console.log('order updated:' + order);
+            _this.inputValue = '';
+        }, function (err) {
+            console.log("there was an error:" + err);
+        });
+    };
+    OrderComponent.prototype.processBarcode = function (value) {
+        if (value.length == 13) {
+            for (var i = 0; i < this.orders.length; i++) {
+                if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
+                    this.updateOrder(this.orders[i].id, 'Complete');
+                    break;
+                }
+                else {
+                    this.inputValue = '';
+                }
+            }
+        }
+    };
     return OrderComponent;
 }());
 OrderComponent = __decorate([
@@ -49,7 +91,7 @@ OrderComponent = __decorate([
         selector: 'orders',
         templateUrl: 'views/orders.html'
     }),
-    __metadata("design:paramtypes", [chat_service_1.ChatService, order_service_1.OrderService, websocket_service_1.WebsocketService])
+    __metadata("design:paramtypes", [router_1.ActivatedRoute, chat_service_1.ChatService, order_service_1.OrderService, websocket_service_1.WebsocketService])
 ], OrderComponent);
 exports.OrderComponent = OrderComponent;
 //# sourceMappingURL=order.component.js.map

@@ -15,7 +15,7 @@ var order_service_1 = require("./order.service");
 var websocket_service_1 = require("./websocket.service");
 require("rxjs/add/operator/map");
 require("rxjs/add/operator/filter");
-var CHAT_URL = 'ws://localhost:8080/whittam-ropes/order-added';
+var CHAT_URL = 'ws://10.0.0.84:8080/whittam-ropes/order-added';
 var ChatService = (function () {
     function ChatService(wsService, orderService) {
         this.wsService = wsService;

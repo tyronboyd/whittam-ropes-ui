@@ -1,11 +1,16 @@
 <div id="home">
   <div class="logo-main"></div>
+  <hr>
   <div class="current-inventory col-md-12">
     <h4>Current Inventory</h4>
     <select (change)="onchange($event)">
       <option>Please select an item</option>
-      <option *ngFor="let item of inventory" [(value)]="item.id">{{item.title}}</option>
+      <option *ngFor="let item of (inventory | searchInventory:searchBox.value)" [(value)]="item.id">{{item.title}}</option>
     </select>
+    <input #searchBox class="search-inventory" type="text" placeholder="Search Inventory..." (keyup)="$event.target.value"/>
+    <input #fileInput class="upload-file" type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." accept=".csv"/>
+    <button class="delete-inventory" (click)="deleteInventory()">Delete all inventory</button>
+    <button class="delete-orders" (click)="deleteOrders()">Delete all Orders</button>
   </div>
   <div class="form-group container-fluid">
     <label for="example-text-input" class="col-md-2 col-form-label">Barcode</label>
@@ -28,5 +33,6 @@
       <button (click)="saveOrder(barcodes.value, itemIds.value, titles.value, quantitys.value)">Add</button>
     </div>
   </div>
+  <hr>
   <orders></orders>
 </div>

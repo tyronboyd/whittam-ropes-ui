@@ -4,13 +4,13 @@ var Constants = (function () {
     function Constants() {
     }
     Object.defineProperty(Constants, "WHITTAM_REST_URL", {
-        get: function () { return "http://localhost:8080/whittam-ropes/"; },
+        get: function () { return "http://10.0.0.84:8080/whittam-ropes/"; },
         enumerable: true,
         configurable: true
     });
     ;
     Object.defineProperty(Constants, "WHITTAM_WEBSOCKET_URL", {
-        get: function () { return "ws://localhost:8080/whittam-ropes/order-added"; },
+        get: function () { return "ws://10.0.0.84:8080/whittam-ropes/order-added"; },
         enumerable: true,
         configurable: true
     });

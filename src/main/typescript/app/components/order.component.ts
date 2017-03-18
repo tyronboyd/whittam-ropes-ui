@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../services/order.service';
 import { ChatService } from '../services/chat.service';
 import { WebsocketService } from '../services/websocket.service';
@@ -19,8 +20,19 @@ export class OrderComponent {
   messages: Message[] = [];
   barcode: string;
   subscription: Subscription;
+  inputValue: string = '';
+  status: string;
+  isOnOrdersPage: boolean = false;
+  isOnCompletedOrders: boolean = false;
 
-  constructor(private chatService: ChatService, private orderService: OrderService, private webSocketService: WebsocketService) {}
+  constructor(private route: ActivatedRoute, private chatService: ChatService, private orderService: OrderService, private webSocketService: WebsocketService) {
+
+    if (this.route.snapshot.url[0].path === 'orders') {
+      this.isOnOrdersPage = true;
+    } else if (this.route.snapshot.url[0].path === 'complete-orders') {
+      this.isOnCompletedOrders = true;
+    }
+  }
 
   ngOnInit() {
     this.webSocketService.connect(Constants.WHITTAM_WEBSOCKET_URL);
@@ -45,6 +57,43 @@ export class OrderComponent {
       (err) => {
         console.log("there was an error:" + err);
       });
+  }
+
+  deleteOrder(order) {
+    this.orderService.deleteOrder(order).subscribe(
+      (order) => {
+        console.log('order deleted:' + order);
+        this.inputValue = '';
+      },
+      (err) => {
+        console.log("there was an error:" + err);
+      }
+    )
+  }
+
+  updateOrder(id, status) {
+    this.orderService.updateOrder(id, status).subscribe(
+      (order) => {
+        console.log('order updated:' + order);
+        this.inputValue = '';
+      },
+      (err) => {
+        console.log("there was an error:" + err);
+      }
+    )
+  }
+
+  processBarcode(value) {
+    if (value.length == 13) {
+      for (let i = 0; i < this.orders.length; i++) {
+        if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
+           this.updateOrder(this.orders[i].id, 'Complete');
+           break;
+        } else {
+          this.inputValue = '';
+        }
+      }
+    }
   }
 
 }

@@ -8,6 +8,19 @@ input.form-control {
   width: 50%;
 }
 
+.upload-file {
+  float: right;
+}
+
+.input-barcode {
+  float: right;
+  opacity: 0.0;
+}
+
+.no-orders-heading {
+  color: grey;
+}
+
 .order-list {
   padding: 29px;
   padding-top: 0;
@@ -15,13 +28,34 @@ input.form-control {
 
 .table-heading {
   font-family: sans-serif;
-  font-size: 16px;
+  font-size: 40px;
   font-weight: bold;
 }
 
-.table-value {
+.search-inventory {
+  width: 300px;
+  margin-left: 25px;
+}
+
+.table-value-button {
+  float: right;
+}
+
+.delete-inventory, .delete-orders {
+  float: right;
+  margin-right: 25px;
+}
+
+.table-value-orders {
+  padding: 20px;
   font-family: sans-serif;
-  font-size: 16px;
+  font-size: 30px;
+}
+
+.table-value {
+  padding: 20px;
+  font-family: sans-serif;
+  font-size: 22px;
 }
 
 .logo-main {
