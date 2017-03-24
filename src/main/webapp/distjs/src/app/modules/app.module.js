@@ -24,6 +24,7 @@ var secure_http_service_1 = require("../services/secure.http.service");
 var websocket_service_1 = require("../services/websocket.service");
 var chat_service_1 = require("../services/chat.service");
 var search_inventory_pipe_1 = require("../pipes/search.inventory.pipe");
+var array_pipe_1 = require("../pipes/array.pipe");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -40,7 +41,7 @@ AppModule = __decorate([
             }),
             forms_1.FormsModule
         ],
-        declarations: [app_component_1.AppComponent, home_component_1.HomeComponent, order_component_1.OrderComponent, search_inventory_pipe_1.SearchInventoryPipe, complete_orders_component_1.CompleteOrdersComponent],
+        declarations: [app_component_1.AppComponent, home_component_1.HomeComponent, order_component_1.OrderComponent, search_inventory_pipe_1.SearchInventoryPipe, array_pipe_1.ArraySort, complete_orders_component_1.CompleteOrdersComponent],
         providers: [ng2_translate_1.TranslateService, order_service_1.OrderService, secure_http_service_1.SecureHttpService, inventory_service_1.InventoryService, websocket_service_1.WebsocketService, chat_service_1.ChatService],
         bootstrap: [app_component_1.AppComponent]
     })

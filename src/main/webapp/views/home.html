@@ -12,6 +12,9 @@
     <button class="delete-inventory" (click)="deleteInventory()">Delete all inventory</button>
     <button class="delete-orders" (click)="deleteOrders()">Delete all Orders</button>
   </div>
+  <div class="col-md-12 col-xs-12 col-lg-12" *ngIf="!orderFormInvalid">
+    <p class="error-message">Order form is invalid. Please check the fields and try again.</p>
+  </div>
   <div class="form-group container-fluid">
     <label for="example-text-input" class="col-md-2 col-form-label">Barcode</label>
     <div class="col-md-10">

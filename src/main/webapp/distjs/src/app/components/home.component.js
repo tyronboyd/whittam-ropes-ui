@@ -26,6 +26,7 @@ var HomeComponent = (function () {
         this.fetchCount = 0;
         this.inventoryData = [];
         this.status = "Incomplete";
+        this.orderFormInvalid = true;
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -40,13 +41,14 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.saveOrder = function (barcode, itemId, title, quantity) {
         var _this = this;
-        if (title && itemId && quantity) {
+        if (title && itemId && quantity && barcode && barcode.length >= 13) {
             var order = new order_1.Order();
             order.barcode = barcode;
             order.itemId = itemId;
             order.title = title;
             order.status = this.status;
             order.quantity = parseInt(quantity, 10);
+            this.orderFormInvalid = true;
             this.orderService.saveOrder(order).subscribe(function (savedOrder) {
                 _this.orderService.setOrder(_this.orders);
                 _this.fetchCount++;
@@ -58,6 +60,9 @@ var HomeComponent = (function () {
             }, function (err) {
                 console.log("there was an error:" + err);
             });
+        }
+        else {
+            this.orderFormInvalid = false;
         }
     };
     HomeComponent.prototype.fetchOrders = function () {

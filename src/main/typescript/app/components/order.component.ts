@@ -83,6 +83,16 @@ export class OrderComponent {
     )
   }
 
+  sortOrders(a: Order, b: Order) {
+    if (a.title < b.title) {
+        return -1;
+    } else if (a.title > b.title) {
+        return 1;
+    } else {
+        return 0;
+    }
+  }
+
   processBarcode(value) {
     if (value.length == 13) {
       for (let i = 0; i < this.orders.length; i++) {

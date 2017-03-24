@@ -71,6 +71,17 @@ var OrderComponent = (function () {
             console.log("there was an error:" + err);
         });
     };
+    OrderComponent.prototype.sortOrders = function (a, b) {
+        if (a.title < b.title) {
+            return -1;
+        }
+        else if (a.title > b.title) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    };
     OrderComponent.prototype.processBarcode = function (value) {
         if (value.length == 13) {
             for (var i = 0; i < this.orders.length; i++) {

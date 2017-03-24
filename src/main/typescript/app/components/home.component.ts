@@ -27,6 +27,7 @@ export class HomeComponent {
     fetchCount: number = 0;
     inventoryData: Array<any> = [];
     status: string = "Incomplete";
+    orderFormInvalid: boolean = true;
 
 
     @ViewChild('fileInput') inputEl: ElementRef;
@@ -46,13 +47,14 @@ export class HomeComponent {
     }
 
    saveOrder(barcode, itemId, title, quantity) {
-     if (title && itemId && quantity) {
+     if (title && itemId && quantity && barcode && barcode.length >= 13) {
        const order = new Order();
        order.barcode = barcode;
        order.itemId = itemId;
        order.title = title;
        order.status = this.status;
        order.quantity = parseInt(quantity, 10);
+       this.orderFormInvalid = true;
          this.orderService.saveOrder(order).subscribe(
            (savedOrder) => {
              this.orderService.setOrder(this.orders);
@@ -66,6 +68,8 @@ export class HomeComponent {
            (err) => {
              console.log("there was an error:" + err);
            });
+         } else {
+           this.orderFormInvalid = false;
          }
    }
 

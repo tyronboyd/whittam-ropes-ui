@@ -16,6 +16,7 @@ import { SecureHttpService } from '../services/secure.http.service';
 import { WebsocketService } from '../services/websocket.service';
 import { ChatService } from '../services/chat.service';
 import { SearchInventoryPipe } from '../pipes/search.inventory.pipe';
+import { ArraySort } from '../pipes/array.pipe';
 
 @NgModule({
     imports: [  BrowserModule,
@@ -28,7 +29,7 @@ import { SearchInventoryPipe } from '../pipes/search.inventory.pipe';
                 FormsModule
     ],
 
-    declarations: [ AppComponent, HomeComponent, OrderComponent, SearchInventoryPipe, CompleteOrdersComponent],
+    declarations: [ AppComponent, HomeComponent, OrderComponent, SearchInventoryPipe, ArraySort, CompleteOrdersComponent],
 
     providers: [ TranslateService, OrderService, SecureHttpService, InventoryService, WebsocketService, ChatService ],
 

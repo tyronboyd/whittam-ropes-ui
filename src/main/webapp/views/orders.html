@@ -14,7 +14,7 @@
       <td class="table-heading col-md-3"></td>
       </ng-container>
     </tr>
-    <tr *ngFor="let order of orders">
+    <tr *ngFor="let order of orders | arraySort: sortOrders">
       <ng-container *ngIf="order.status == 'Incomplete' && isOnOrdersPage && !isOnCompletedOrders">
         <td class="table-value-orders">{{order.itemId}}</td>
         <td class="table-value-orders">{{order.title}}</td>
