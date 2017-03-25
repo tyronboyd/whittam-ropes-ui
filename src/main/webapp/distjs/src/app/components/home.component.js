@@ -41,7 +41,7 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.saveOrder = function (barcode, itemId, title, quantity) {
         var _this = this;
-        if (title && itemId && quantity && barcode && barcode.length >= 13) {
+        if (title && itemId && quantity && barcode && barcode.length >= 13 && quantity > 0) {
             var order = new order_1.Order();
             order.barcode = barcode;
             order.itemId = itemId;
@@ -106,12 +106,14 @@ var HomeComponent = (function () {
                 data_1 = $.csv.toObjects(csvData);
                 for (var i = 0; i < data_1.length; i++) {
                     _this.inventoryData.push({
+                        uniqueid: data_1[i].UNIQUEID,
                         barcode: data_1[i].BARCODE,
                         title: data_1[i].TITLE,
-                        uniqueId: data_1[i].UNIQUEID
+                        id: null
                     });
                 }
                 _this.saveAllInventory(_this.inventoryData);
+                file_1 = null;
             };
             reader_1.readAsText(file_1);
             reader_1.onerror = function () {
@@ -121,6 +123,7 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.saveAllInventory = function (inventory) {
         var _this = this;
+        console.log(inventory);
         this.inventoryService.saveAllInventory(inventory).subscribe(function (inventory) {
             console.log('saved inventory');
             _this.fetchInventory();

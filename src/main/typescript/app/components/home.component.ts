@@ -25,7 +25,7 @@ export class HomeComponent {
     inventorySubscription: Subscription;
     selectedItem: string;
     fetchCount: number = 0;
-    inventoryData: Array<any> = [];
+    inventoryData: Array<Inventory> = [];
     status: string = "Incomplete";
     orderFormInvalid: boolean = true;
 
@@ -47,7 +47,7 @@ export class HomeComponent {
     }
 
    saveOrder(barcode, itemId, title, quantity) {
-     if (title && itemId && quantity && barcode && barcode.length >= 13) {
+     if (title && itemId && quantity && barcode && barcode.length >= 13 && quantity > 0) {
        const order = new Order();
        order.barcode = barcode;
        order.itemId = itemId;
@@ -118,12 +118,14 @@ export class HomeComponent {
                data = $.csv.toObjects(csvData);
                for (let i = 0; i < data.length; i++) {
                  this.inventoryData.push({
+                   uniqueid: data[i].UNIQUEID,
                    barcode: data[i].BARCODE,
                    title: data[i].TITLE,
-                   uniqueId: data[i].UNIQUEID
+                   id: null
                  })
                }
                this.saveAllInventory(this.inventoryData);
+               file = null;
             }
          reader.readAsText(file);
          reader.onerror = function () {
@@ -133,6 +135,7 @@ export class HomeComponent {
     }
 
     saveAllInventory(inventory) {
+      console.log(inventory)
       this.inventoryService.saveAllInventory(inventory).subscribe(
         (inventory) => {
           console.log('saved inventory');
