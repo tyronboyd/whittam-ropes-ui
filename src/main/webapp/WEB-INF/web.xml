@@ -14,7 +14,7 @@
 
 	<servlet-mapping>
 		<servlet-name>index</servlet-name>
-		<url-pattern>/home/*</url-pattern>
+		<url-pattern>/*/*</url-pattern>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
 
