@@ -12,25 +12,34 @@
     <button class="delete-inventory" (click)="deleteInventory()">Delete all inventory</button>
     <button class="delete-orders" (click)="deleteOrders()">Delete all Orders</button>
   </div>
-  <div class="col-md-12 col-xs-12 col-lg-12" *ngIf="!orderFormInvalid">
-    <p class="error-message">Order form is invalid. Please check the fields and try again.</p>
-  </div>
   <div class="form-group container-fluid">
     <label for="example-text-input" class="col-md-2 col-form-label">Barcode</label>
     <div class="col-md-10">
       <input #barcodes class="form-control" type="text" [value]="barcode"/>
+      <div *ngIf="!validateBarcode">
+        <p class="error-message">Please enter a 13 digit barcode.</p>
+      </div>
     </div>
     <label for="example-text-input" class="col-md-2  col-form-label">ItemId</label>
     <div class="col-md-10">
       <input #itemIds class="form-control" type="text"[value]="itemId" />
+      <div *ngIf="!validateItemId">
+        <p class="error-message">Please enter a valid ItemId.</p>
+      </div>
     </div>
     <label for="example-text-input" class="col-md-2  col-form-label">Title</label>
     <div class="col-md-10">
       <input #titles class="form-control" type="text" [value]="title"/>
+      <div *ngIf="!validateTitle">
+        <p class="error-message">Please enter valid title.</p>
+      </div>
     </div>
     <label for="example-text-input" class="col-md-2  col-form-label">Quantity</label>
     <div class="col-md-10">
       <input #quantitys  class="form-control" type="text" [value]="quantity"/>
+      <div *ngIf="!validateQuantity">
+        <p class="error-message">Please enter a quantity more than 0.</p>
+      </div>
     </div>
     <div class="button col-md-8">
       <button (click)="saveOrder(barcodes.value, itemIds.value, titles.value, quantitys.value)">Add</button>

@@ -27,7 +27,12 @@ export class HomeComponent {
     fetchCount: number = 0;
     inventoryData: Array<Inventory> = [];
     status: string = "Incomplete";
-    orderFormInvalid: boolean = true;
+
+    //validation
+    validateBarcode: boolean = true;
+    validateTitle: boolean = true;
+    validateItemId: boolean = true;
+    validateQuantity: boolean = true;
 
 
     @ViewChild('fileInput') inputEl: ElementRef;
@@ -47,14 +52,15 @@ export class HomeComponent {
     }
 
    saveOrder(barcode, itemId, title, quantity) {
-     if (title && itemId && quantity && barcode && barcode.length >= 13 && quantity > 0) {
+
+     if (title.length > 0 && itemId.length > 0 &&
+       quantity && quantity > 0 && barcode.length > 0 && barcode.length >= 13) {
        const order = new Order();
        order.barcode = barcode;
        order.itemId = itemId;
        order.title = title;
        order.status = this.status;
        order.quantity = parseInt(quantity, 10);
-       this.orderFormInvalid = true;
          this.orderService.saveOrder(order).subscribe(
            (savedOrder) => {
              this.orderService.setOrder(this.orders);
@@ -69,7 +75,7 @@ export class HomeComponent {
              console.log("there was an error:" + err);
            });
          } else {
-           this.orderFormInvalid = false;
+           this.validateForm(barcode, itemId, title, quantity);
          }
    }
 
@@ -88,7 +94,6 @@ export class HomeComponent {
      this.inventoryService.fetchInventory().subscribe(
        (inventory) => {
          this.inventory = inventory
-         console.log(this.inventory);
        },
        (err) => {
          console.log("there was an error:" + err);
@@ -125,7 +130,6 @@ export class HomeComponent {
                  })
                }
                this.saveAllInventory(this.inventoryData);
-               file = null;
             }
          reader.readAsText(file);
          reader.onerror = function () {
@@ -135,7 +139,6 @@ export class HomeComponent {
     }
 
     saveAllInventory(inventory) {
-      console.log(inventory)
       this.inventoryService.saveAllInventory(inventory).subscribe(
         (inventory) => {
           console.log('saved inventory');
@@ -178,4 +181,11 @@ export class HomeComponent {
           console.log("there was an error:" + err);
         });
     }
+
+   validateForm(barcode, itemId, title, quantity) {
+     barcode.length !== 13 ? this.validateBarcode = false : this.validateBarcode = true;
+     itemId.length == 0 ? this.validateItemId = false : this.validateItemId = true;
+     title.length == 0 ? this.validateTitle = false : this.validateTitle = true;
+     quantity == 0 ? this.validateQuantity = false : this.validateQuantity = true;
+   }
 }

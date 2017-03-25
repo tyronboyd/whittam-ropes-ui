@@ -71,8 +71,8 @@ export class OrderComponent {
     )
   }
 
-  updateOrder(id, status) {
-    this.orderService.updateOrder(id, status).subscribe(
+  updateOrder(id, status, quantity) {
+    this.orderService.updateOrder(id, status, quantity).subscribe(
       (order) => {
         console.log('order updated:' + order);
         this.inputValue = '';
@@ -94,11 +94,18 @@ export class OrderComponent {
   }
 
   processBarcode(value) {
+    let tempQuantity = 0;
     if (value.length == 13) {
       for (let i = 0; i < this.orders.length; i++) {
         if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
-           this.updateOrder(this.orders[i].id, 'Complete');
-           break;
+          if (this.orders[i].quantity > 1) {
+              tempQuantity = (this.orders[i].quantity - 1);
+              this.updateOrder(this.orders[i].id, 'Incomplete', tempQuantity);
+              break;
+          } else {
+              this.updateOrder(this.orders[i].id, 'Complete', 0);
+              break;
+          }
         } else {
           this.inputValue = '';
         }

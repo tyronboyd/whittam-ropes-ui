@@ -26,10 +26,11 @@ var OrderService = (function () {
     OrderService.prototype.deleteOrder = function (order) {
         return this.http.deleteWithHeaders(constants_1.Constants.WHITTAM_REST_URL + 'delete/order', null, order, null);
     };
-    OrderService.prototype.updateOrder = function (id, status) {
+    OrderService.prototype.updateOrder = function (id, status, quantity) {
         var myParams = new http_1.URLSearchParams();
         myParams.set('id', id);
         myParams.set('status', status);
+        myParams.set('quantity', quantity);
         return this.http.putWithHeaders(constants_1.Constants.WHITTAM_REST_URL + 'update/order', myParams, null, null);
     };
     OrderService.prototype.fetchOrder = function () {

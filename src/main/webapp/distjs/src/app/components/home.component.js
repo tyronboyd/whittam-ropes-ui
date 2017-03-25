@@ -26,7 +26,11 @@ var HomeComponent = (function () {
         this.fetchCount = 0;
         this.inventoryData = [];
         this.status = "Incomplete";
-        this.orderFormInvalid = true;
+        //validation
+        this.validateBarcode = true;
+        this.validateTitle = true;
+        this.validateItemId = true;
+        this.validateQuantity = true;
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -41,14 +45,14 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.saveOrder = function (barcode, itemId, title, quantity) {
         var _this = this;
-        if (title && itemId && quantity && barcode && barcode.length >= 13 && quantity > 0) {
+        if (title.length > 0 && itemId.length > 0 &&
+            quantity && quantity > 0 && barcode.length > 0 && barcode.length >= 13) {
             var order = new order_1.Order();
             order.barcode = barcode;
             order.itemId = itemId;
             order.title = title;
             order.status = this.status;
             order.quantity = parseInt(quantity, 10);
-            this.orderFormInvalid = true;
             this.orderService.saveOrder(order).subscribe(function (savedOrder) {
                 _this.orderService.setOrder(_this.orders);
                 _this.fetchCount++;
@@ -62,7 +66,7 @@ var HomeComponent = (function () {
             });
         }
         else {
-            this.orderFormInvalid = false;
+            this.validateForm(barcode, itemId, title, quantity);
         }
     };
     HomeComponent.prototype.fetchOrders = function () {
@@ -78,7 +82,6 @@ var HomeComponent = (function () {
         var _this = this;
         this.inventoryService.fetchInventory().subscribe(function (inventory) {
             _this.inventory = inventory;
-            console.log(_this.inventory);
         }, function (err) {
             console.log("there was an error:" + err);
         });
@@ -113,7 +116,6 @@ var HomeComponent = (function () {
                     });
                 }
                 _this.saveAllInventory(_this.inventoryData);
-                file_1 = null;
             };
             reader_1.readAsText(file_1);
             reader_1.onerror = function () {
@@ -123,7 +125,6 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.saveAllInventory = function (inventory) {
         var _this = this;
-        console.log(inventory);
         this.inventoryService.saveAllInventory(inventory).subscribe(function (inventory) {
             console.log('saved inventory');
             _this.fetchInventory();
@@ -157,6 +158,12 @@ var HomeComponent = (function () {
         }, function (err) {
             console.log("there was an error:" + err);
         });
+    };
+    HomeComponent.prototype.validateForm = function (barcode, itemId, title, quantity) {
+        barcode.length !== 13 ? this.validateBarcode = false : this.validateBarcode = true;
+        itemId.length == 0 ? this.validateItemId = false : this.validateItemId = true;
+        title.length == 0 ? this.validateTitle = false : this.validateTitle = true;
+        quantity == 0 ? this.validateQuantity = false : this.validateQuantity = true;
     };
     return HomeComponent;
 }());
