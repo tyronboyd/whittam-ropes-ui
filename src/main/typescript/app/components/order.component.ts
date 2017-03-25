@@ -110,6 +110,8 @@ export class OrderComponent {
           this.inputValue = '';
         }
       }
+    } else if (value.length > 13) {
+      this.inputValue = '';
     }
   }
 
