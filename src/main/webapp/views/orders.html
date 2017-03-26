@@ -1,5 +1,5 @@
 <div class="order-list col-md-12">
-  <input [(ngModel)]="inputValue" class="input-barcode" type="text" (keyup)="processBarcode($event.target.value)" autofocus/>
+  <input #barcodeInputField [(ngModel)]="inputValue" class="input-barcode" type="text" (keyup)="processBarcode($event.target.value)" autofocus/>
   <h4>List of current orders</h4>
   <p *ngIf="!isOnOrdersPage">Number of total orders: {{orders.length}}</p>
   <hr *ngIf="orders.length === 0">
@@ -29,7 +29,7 @@
         <td class="table-value"><button class="table-value-button" (click)="deleteOrder(order)">Delete</button></td>
       </ng-container>
       <ng-container *ngIf="order.status == 'Complete' && isOnCompletedOrders">
-        <td class="table-value">{{order.itemId}} test</td>
+        <td class="table-value">{{order.itemId}}</td>
         <td class="table-value">{{order.title}}</td>
         <td class="table-value">{{order.quantity}}</td>
         <td class="table-value">{{order.status}}</td>

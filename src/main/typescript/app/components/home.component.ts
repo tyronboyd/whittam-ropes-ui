@@ -54,7 +54,7 @@ export class HomeComponent {
    saveOrder(barcode, itemId, title, quantity) {
 
      if (title.length > 0 && itemId.length > 0 &&
-       quantity && quantity > 0 && barcode.length > 0 && barcode.length >= 13) {
+       quantity && quantity > 0 && barcode.length > 0) {
        const order = new Order();
        order.barcode = barcode;
        order.itemId = itemId;
@@ -183,7 +183,7 @@ export class HomeComponent {
     }
 
    validateForm(barcode, itemId, title, quantity) {
-     barcode.length !== 13 ? this.validateBarcode = false : this.validateBarcode = true;
+     barcode.length == 0 ? this.validateBarcode = false : this.validateBarcode = true;
      itemId.length == 0 ? this.validateItemId = false : this.validateItemId = true;
      title.length == 0 ? this.validateTitle = false : this.validateTitle = true;
      quantity == 0 ? this.validateQuantity = false : this.validateQuantity = true;

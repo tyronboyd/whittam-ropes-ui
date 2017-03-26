@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../services/order.service';
 import { ChatService } from '../services/chat.service';
@@ -24,6 +24,7 @@ export class OrderComponent {
   status: string;
   isOnOrdersPage: boolean = false;
   isOnCompletedOrders: boolean = false;
+  @ViewChild('barcodeInputField') barcodeInput;
 
   constructor(private route: ActivatedRoute, private chatService: ChatService, private orderService: OrderService, private webSocketService: WebsocketService) {
 
@@ -32,6 +33,10 @@ export class OrderComponent {
     } else if (this.route.snapshot.url[0].path === 'complete-orders') {
       this.isOnCompletedOrders = true;
     }
+  }
+
+  ngAfterViewInit() {
+    this.barcodeInput.nativeElement.focus()
   }
 
   ngOnInit() {
@@ -95,7 +100,7 @@ export class OrderComponent {
 
   processBarcode(value) {
     let tempQuantity = 0;
-    if (value.length == 13) {
+    if (value.length > 0) {
       for (let i = 0; i < this.orders.length; i++) {
         if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
           if (this.orders[i].quantity > 1) {
@@ -110,7 +115,7 @@ export class OrderComponent {
           this.inputValue = '';
         }
       }
-    } else if (value.length > 13) {
+    } else {
       this.inputValue = '';
     }
   }
