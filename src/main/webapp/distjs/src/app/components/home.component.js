@@ -46,12 +46,13 @@ var HomeComponent = (function () {
     HomeComponent.prototype.saveOrder = function (barcode, itemId, title, quantity) {
         var _this = this;
         if (title.length > 0 && itemId.length > 0 &&
-            quantity && quantity > 0 && barcode.length > 0 && barcode.length >= 13) {
+            quantity && quantity > 0 && barcode.length > 0) {
             var order = new order_1.Order();
             order.barcode = barcode;
             order.itemId = itemId;
             order.title = title;
             order.status = this.status;
+            order.totalQuantity = 0;
             order.quantity = parseInt(quantity, 10);
             this.orderService.saveOrder(order).subscribe(function (savedOrder) {
                 _this.orderService.setOrder(_this.orders);
@@ -160,7 +161,7 @@ var HomeComponent = (function () {
         });
     };
     HomeComponent.prototype.validateForm = function (barcode, itemId, title, quantity) {
-        barcode.length !== 13 ? this.validateBarcode = false : this.validateBarcode = true;
+        barcode.length == 0 ? this.validateBarcode = false : this.validateBarcode = true;
         itemId.length == 0 ? this.validateItemId = false : this.validateItemId = true;
         title.length == 0 ? this.validateTitle = false : this.validateTitle = true;
         quantity == 0 ? this.validateQuantity = false : this.validateQuantity = true;

@@ -60,6 +60,7 @@ export class HomeComponent {
        order.itemId = itemId;
        order.title = title;
        order.status = this.status;
+       order.totalQuantity = 0;
        order.quantity = parseInt(quantity, 10);
          this.orderService.saveOrder(order).subscribe(
            (savedOrder) => {

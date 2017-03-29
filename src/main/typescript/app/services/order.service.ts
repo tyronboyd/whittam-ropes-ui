@@ -21,11 +21,12 @@ export class OrderService {
     return this.http.deleteWithHeaders(Constants.WHITTAM_REST_URL + 'delete/order', null, order, null);
   }
 
-  updateOrder(id, status, quantity) {
+  updateOrder(id, status, quantity, totalQuantity) {
     let myParams: URLSearchParams = new URLSearchParams();
     myParams.set('id', id);
     myParams.set('status', status);
     myParams.set('quantity', quantity);
+    myParams.set('totalQuantity', totalQuantity);
     return this.http.putWithHeaders(Constants.WHITTAM_REST_URL + 'update/order', myParams, null, null);
   }
 

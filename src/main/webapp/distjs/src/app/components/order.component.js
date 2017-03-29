@@ -32,6 +32,9 @@ var OrderComponent = (function () {
             this.isOnCompletedOrders = true;
         }
     }
+    OrderComponent.prototype.ngAfterViewInit = function () {
+        this.isOnOrdersPage ? this.barcodeInput.nativeElement.focus() : null;
+    };
     OrderComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.webSocketService.connect(constants_1.Constants.WHITTAM_WEBSOCKET_URL);
@@ -62,9 +65,9 @@ var OrderComponent = (function () {
             console.log("there was an error:" + err);
         });
     };
-    OrderComponent.prototype.updateOrder = function (id, status, quantity) {
+    OrderComponent.prototype.updateOrder = function (id, status, quantity, totalQualtity) {
         var _this = this;
-        this.orderService.updateOrder(id, status, quantity).subscribe(function (order) {
+        this.orderService.updateOrder(id, status, quantity, totalQualtity).subscribe(function (order) {
             console.log('order updated:' + order);
             _this.inputValue = '';
         }, function (err) {
@@ -84,16 +87,18 @@ var OrderComponent = (function () {
     };
     OrderComponent.prototype.processBarcode = function (value) {
         var tempQuantity = 0;
-        if (value.length == 13) {
+        var tempTotalQuantity = 0;
+        if (value.length > 0) {
             for (var i = 0; i < this.orders.length; i++) {
                 if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
                     if (this.orders[i].quantity > 1) {
                         tempQuantity = (this.orders[i].quantity - 1);
-                        this.updateOrder(this.orders[i].id, 'Incomplete', tempQuantity);
+                        tempTotalQuantity = (this.orders[i].totalQuantity + 1);
+                        this.updateOrder(this.orders[i].id, 'Incomplete', tempQuantity, tempTotalQuantity);
                         break;
                     }
                     else {
-                        this.updateOrder(this.orders[i].id, 'Complete', 0);
+                        this.updateOrder(this.orders[i].id, 'Complete', 0, this.orders[i].totalQuantity + 1);
                         break;
                     }
                 }
@@ -102,9 +107,16 @@ var OrderComponent = (function () {
                 }
             }
         }
+        else {
+            this.inputValue = '';
+        }
     };
     return OrderComponent;
 }());
+__decorate([
+    core_1.ViewChild('barcodeInputField'),
+    __metadata("design:type", Object)
+], OrderComponent.prototype, "barcodeInput", void 0);
 OrderComponent = __decorate([
     core_1.Component({
         selector: 'orders',

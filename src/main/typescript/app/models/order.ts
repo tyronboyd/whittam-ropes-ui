@@ -5,4 +5,5 @@ export class Order {
   title: string;
   quantity: number;
   status: string;
+  totalQuantity: number;
 }

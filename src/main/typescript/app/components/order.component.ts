@@ -36,7 +36,7 @@ export class OrderComponent {
   }
 
   ngAfterViewInit() {
-    this.barcodeInput.nativeElement.focus()
+    this.isOnOrdersPage ? this.barcodeInput.nativeElement.focus() : null;
   }
 
   ngOnInit() {
@@ -76,8 +76,8 @@ export class OrderComponent {
     )
   }
 
-  updateOrder(id, status, quantity) {
-    this.orderService.updateOrder(id, status, quantity).subscribe(
+  updateOrder(id, status, quantity, totalQualtity) {
+    this.orderService.updateOrder(id, status, quantity, totalQualtity).subscribe(
       (order) => {
         console.log('order updated:' + order);
         this.inputValue = '';
@@ -100,15 +100,17 @@ export class OrderComponent {
 
   processBarcode(value) {
     let tempQuantity = 0;
+    let tempTotalQuantity = 0;
     if (value.length > 0) {
       for (let i = 0; i < this.orders.length; i++) {
         if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
           if (this.orders[i].quantity > 1) {
               tempQuantity = (this.orders[i].quantity - 1);
-              this.updateOrder(this.orders[i].id, 'Incomplete', tempQuantity);
+              tempTotalQuantity = (this.orders[i].totalQuantity + 1);
+              this.updateOrder(this.orders[i].id, 'Incomplete', tempQuantity, tempTotalQuantity);
               break;
           } else {
-              this.updateOrder(this.orders[i].id, 'Complete', 0);
+              this.updateOrder(this.orders[i].id, 'Complete', 0, this.orders[i].totalQuantity + 1);
               break;
           }
         } else {
