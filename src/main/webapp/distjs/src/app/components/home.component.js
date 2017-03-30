@@ -43,7 +43,7 @@ var HomeComponent = (function () {
             _this.fetchOrders();
         });
     };
-    HomeComponent.prototype.saveOrder = function (barcode, itemId, title, quantity) {
+    HomeComponent.prototype.saveOrder = function (barcode, itemId, title, quantity, status) {
         var _this = this;
         if (title.length > 0 && itemId.length > 0 &&
             quantity && quantity > 0 && barcode.length > 0) {
@@ -51,9 +51,14 @@ var HomeComponent = (function () {
             order.barcode = barcode;
             order.itemId = itemId;
             order.title = title;
-            order.status = this.status;
-            order.totalQuantity = 0;
             order.quantity = parseInt(quantity, 10);
+            if (status === null) {
+                order.status = this.status;
+            }
+            else {
+                order.status = status;
+                order.totalQuantity = order.quantity;
+            }
             this.orderService.saveOrder(order).subscribe(function (savedOrder) {
                 _this.orderService.setOrder(_this.orders);
                 _this.fetchCount++;

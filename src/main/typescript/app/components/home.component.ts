@@ -51,17 +51,20 @@ export class HomeComponent {
         });
     }
 
-   saveOrder(barcode, itemId, title, quantity) {
-
+   saveOrder(barcode, itemId, title, quantity, status) {
      if (title.length > 0 && itemId.length > 0 &&
        quantity && quantity > 0 && barcode.length > 0) {
        const order = new Order();
        order.barcode = barcode;
        order.itemId = itemId;
        order.title = title;
-       order.status = this.status;
-       order.totalQuantity = 0;
        order.quantity = parseInt(quantity, 10);
+       if (status === null) {
+         order.status = this.status;
+       } else {
+         order.status = status;
+         order.totalQuantity = order.quantity;
+       }
          this.orderService.saveOrder(order).subscribe(
            (savedOrder) => {
              this.orderService.setOrder(this.orders);
