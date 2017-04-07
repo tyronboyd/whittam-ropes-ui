@@ -2,6 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../services/order.service';
 import { ChatService } from '../services/chat.service';
+import { InventoryService } from '../services/inventory.service';
 import { WebsocketService } from '../services/websocket.service';
 import { Order } from '../models/order';
 import { Inventory } from '../models/inventory';
@@ -19,6 +20,7 @@ export class OrderComponent {
   orders: Array<Order>;
   messages: Message[] = [];
   barcode: string;
+  inventory: Array<Inventory>;
   subscription: Subscription;
   inputValue: string = '';
   status: string;
@@ -26,7 +28,8 @@ export class OrderComponent {
   isOnCompletedOrders: boolean = false;
   @ViewChild('barcodeInputField') barcodeInput;
 
-  constructor(private route: ActivatedRoute, private chatService: ChatService, private orderService: OrderService, private webSocketService: WebsocketService) {
+  constructor(private route: ActivatedRoute, private chatService: ChatService, private orderService: OrderService, private webSocketService: WebsocketService,
+  private inventoryService: InventoryService) {
 
     if (this.route.snapshot.url[0].path === 'orders') {
       this.isOnOrdersPage = true;
@@ -99,11 +102,13 @@ export class OrderComponent {
   }
 
   processBarcode(value) {
+    let isInOrderList = false;
     let tempQuantity = 0;
     let tempTotalQuantity = 0;
     if (value.length > 0) {
       for (let i = 0; i < this.orders.length; i++) {
         if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
+          isInOrderList = true;
           if (this.orders[i].quantity > 1) {
               tempQuantity = (this.orders[i].quantity - 1);
               tempTotalQuantity = (this.orders[i].totalQuantity + 1);
@@ -117,9 +122,67 @@ export class OrderComponent {
           this.inputValue = '';
         }
       }
+      if (!isInOrderList)
+        this.processNewOrder(value);
     } else {
       this.inputValue = '';
     }
+
   }
+
+  processNewOrder(value) {
+  if (this.orders.length > 0) {
+    for (let i = 0; i < this.orders.length; i++) {
+      if (this.orders[i].status === 'New Order' && this.orders[i].barcode === value) {
+        return this.updateOrder(this.orders[i].id, 'New Order', this.orders[i].quantity - 1,
+        this.orders[i].totalQuantity + 1);
+      }
+    }
+  }
+  this.inventoryService.fetchInventory().subscribe(
+    (inventory) => {
+      this.inventory = inventory;
+      let order = new Order();
+      if (inventory && inventory.length > 0) {
+        for (let i = 0; i < inventory.length; i++) {
+          console.log(inventory[i].barcode);
+          if (inventory[i].barcode === value) {
+            order.barcode = this.inventory[i].barcode;
+            order.itemId = this.inventory[i].uniqueid;
+            order.title = this.inventory[i].title;
+            order.quantity = -1;
+            order.totalQuantity = 1;
+            order.status = "New Order";
+            this.saveOrder(order);
+          }
+        }
+      }
+    },
+    (err) => {
+      console.log("there was an error:" + err);
+    });
+    this.inputValue = '';
+  }
+
+  fetchInventory() {
+    this.inventoryService.fetchInventory().subscribe(
+      (inventory) => {
+        this.inventory = inventory
+      },
+      (err) => {
+        console.log("there was an error:" + err);
+      });
+  }
+
+  saveOrder(order) {
+      this.orderService.saveOrder(order).subscribe(
+        (savedOrder) => {
+          this.orderService.setOrder(this.orders);
+          this.fetchOrders();
+        },
+        (err) => {
+          console.log("there was an error:" + err);
+        });
+    }
 
 }
