@@ -26,6 +26,8 @@ export class OrderComponent {
   status: string;
   isOnOrdersPage: boolean = false;
   isOnCompletedOrders: boolean = false;
+  orderNotFound: string = null;
+  inventoryNotFound: boolean = false;
   @ViewChild('barcodeInputField') barcodeInput;
 
   constructor(private route: ActivatedRoute, private chatService: ChatService, private orderService: OrderService, private webSocketService: WebsocketService,
@@ -131,21 +133,21 @@ export class OrderComponent {
   }
 
   processNewOrder(value) {
-  if (this.orders.length > 0) {
-    for (let i = 0; i < this.orders.length; i++) {
-      if (this.orders[i].status === 'New Order' && this.orders[i].barcode === value) {
-        return this.updateOrder(this.orders[i].id, 'New Order', this.orders[i].quantity - 1,
-        this.orders[i].totalQuantity + 1);
+    this.orderNotFond = '';
+    if (this.orders.length > 0) {
+      for (let i = 0; i < this.orders.length; i++) {
+        if (this.orders[i].status === 'New Order' && this.orders[i].barcode === value) {
+          return this.updateOrder(this.orders[i].id, 'New Order', this.orders[i].quantity - 1,
+          this.orders[i].totalQuantity + 1);
+        }
       }
     }
-  }
   this.inventoryService.fetchInventory().subscribe(
     (inventory) => {
       this.inventory = inventory;
       let order = new Order();
       if (inventory && inventory.length > 0) {
         for (let i = 0; i < inventory.length; i++) {
-          console.log(inventory[i].barcode);
           if (inventory[i].barcode === value) {
             order.barcode = this.inventory[i].barcode;
             order.itemId = this.inventory[i].uniqueid;
@@ -154,7 +156,14 @@ export class OrderComponent {
             order.totalQuantity = 1;
             order.status = "New Order";
             this.saveOrder(order);
+            this.orderNotFound = 'found';
           }
+        }
+        if (this.orderNotFound !== 'found') {
+          this.inventoryNotFound = true;
+          setTimeout(() => {
+            this.inventoryNotFound = false;
+          }, 2000)
         }
       }
     },
@@ -162,6 +171,7 @@ export class OrderComponent {
       console.log("there was an error:" + err);
     });
     this.inputValue = '';
+    this.orderNotFound = null;
   }
 
   fetchInventory() {

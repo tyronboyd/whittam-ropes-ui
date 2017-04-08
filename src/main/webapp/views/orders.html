@@ -3,6 +3,9 @@
     <input #barcodeInputField [(ngModel)]="inputValue" class="input-barcode" type="text" (keyup)="processBarcode($event.target.value)" autofocus/>
   </div>
   <h4>List of current orders</h4>
+  <div *ngIf="inventoryNotFound">
+    <h3 class="no-order-error">No order has been found for the barcode entered. Please try again.</h3>
+  </div>
   <p *ngIf="!isOnOrdersPage">Number of total orders: {{orders.length}}</p>
   <hr *ngIf="orders.length === 0">
   <table class="table">
