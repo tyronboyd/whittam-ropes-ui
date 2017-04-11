@@ -26,7 +26,6 @@ export class OrderComponent {
   status: string;
   isOnOrdersPage: boolean = false;
   isOnCompletedOrders: boolean = false;
-  orderNotFound: string = null;
   inventoryNotFound: boolean = false;
   @ViewChild('barcodeInputField') barcodeInput;
 
@@ -121,7 +120,9 @@ export class OrderComponent {
               break;
           }
         } else {
-          this.inputValue = '';
+          setTimeout(() => {
+            this.inputValue = '';
+          }, 500)
         }
       }
       if (!isInOrderList)
@@ -133,12 +134,12 @@ export class OrderComponent {
   }
 
   processNewOrder(value) {
-    this.orderNotFond = '';
     if (this.orders.length > 0) {
       for (let i = 0; i < this.orders.length; i++) {
         if (this.orders[i].status === 'New Order' && this.orders[i].barcode === value) {
           return this.updateOrder(this.orders[i].id, 'New Order', this.orders[i].quantity - 1,
           this.orders[i].totalQuantity + 1);
+          break;
         }
       }
     }
@@ -156,7 +157,11 @@ export class OrderComponent {
             order.totalQuantity = 1;
             order.status = "New Order";
             this.saveOrder(order);
-            this.orderNotFound = 'found';
+            break;
+          } else {
+            setTimeout(() => {
+              this.inputValue = '';
+            }, 500)
           }
         }
         if (this.orderNotFound !== 'found') {
@@ -170,7 +175,6 @@ export class OrderComponent {
     (err) => {
       console.log("there was an error:" + err);
     });
-    this.inputValue = '';
     this.orderNotFound = null;
   }
 
