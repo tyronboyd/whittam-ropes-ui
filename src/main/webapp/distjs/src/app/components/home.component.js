@@ -161,10 +161,10 @@ var HomeComponent = (function () {
         });
     };
     HomeComponent.prototype.validateForm = function (barcode, itemId, title, quantity) {
-        barcode.length == 0 ? this.validateBarcode = false : this.validateBarcode = true;
-        itemId.length == 0 ? this.validateItemId = false : this.validateItemId = true;
-        title.length == 0 ? this.validateTitle = false : this.validateTitle = true;
-        quantity == 0 ? this.validateQuantity = false : this.validateQuantity = true;
+        barcode.length !== 13 ? this.validateBarcode = false : this.validateBarcode = true;
+        itemId.length === 0 ? this.validateItemId = false : this.validateItemId = true;
+        title.length === 0 ? this.validateTitle = false : this.validateTitle = true;
+        quantity === 0 ? this.validateQuantity = false : this.validateQuantity = true;
     };
     return HomeComponent;
 }());

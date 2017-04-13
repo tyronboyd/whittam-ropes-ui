@@ -17,7 +17,7 @@
     <div class="col-md-10">
       <input #barcodes class="form-control" type="text" [value]="barcode"/>
       <div *ngIf="!validateBarcode">
-        <p class="error-message">Please enter a valid barcode.</p>
+        <p class="error-message">Please enter a barcode that is 13 numbers long.</p>
       </div>
     </div>
     <label for="example-text-input" class="col-md-2  col-form-label">ItemId</label>
