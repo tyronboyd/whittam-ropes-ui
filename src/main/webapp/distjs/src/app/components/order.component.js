@@ -13,18 +13,23 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var order_service_1 = require("../services/order.service");
 var chat_service_1 = require("../services/chat.service");
+var inventory_service_1 = require("../services/inventory.service");
 var websocket_service_1 = require("../services/websocket.service");
+var order_1 = require("../models/order");
 var constants_1 = require("../util/constants");
 var OrderComponent = (function () {
-    function OrderComponent(route, chatService, orderService, webSocketService) {
+    function OrderComponent(route, chatService, orderService, webSocketService, inventoryService) {
         this.route = route;
         this.chatService = chatService;
         this.orderService = orderService;
         this.webSocketService = webSocketService;
+        this.inventoryService = inventoryService;
         this.messages = [];
         this.inputValue = '';
         this.isOnOrdersPage = false;
         this.isOnCompletedOrders = false;
+        this.inventoryNotFound = false;
+        this.isInOrderList = false;
         if (this.route.snapshot.url[0].path === 'orders') {
             this.isOnOrdersPage = true;
         }
@@ -88,9 +93,10 @@ var OrderComponent = (function () {
     OrderComponent.prototype.processBarcode = function (value) {
         var tempQuantity = 0;
         var tempTotalQuantity = 0;
-        if (value.length > 0) {
+        if (value.length == 13) {
             for (var i = 0; i < this.orders.length; i++) {
                 if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
+                    this.isInOrderList = true;
                     if (this.orders[i].quantity > 1) {
                         tempQuantity = (this.orders[i].quantity - 1);
                         tempTotalQuantity = (this.orders[i].totalQuantity + 1);
@@ -104,12 +110,66 @@ var OrderComponent = (function () {
                 }
                 else {
                     this.inputValue = '';
+                    this.isInOrderList = false;
                 }
             }
+            if (!this.isInOrderList)
+                this.processNewOrder(value);
         }
-        else {
+        else if (value.length > 13) {
             this.inputValue = '';
         }
+    };
+    OrderComponent.prototype.processNewOrder = function (value) {
+        var _this = this;
+        if (value.length == 13) {
+            if (this.orders.length > 0) {
+                for (var i = 0; i < this.orders.length; i++) {
+                    if (this.orders[i].status === 'New Order' && this.orders[i].barcode === value) {
+                        return this.updateOrder(this.orders[i].id, 'New Order', this.orders[i].quantity - 1, this.orders[i].totalQuantity + 1);
+                        break;
+                    }
+                }
+            }
+            this.inventoryService.fetchInventory().subscribe(function (inventory) {
+                _this.inventory = inventory;
+                var order = new order_1.Order();
+                if (inventory && inventory.length > 0) {
+                    for (var i = 0; i < inventory.length; i++) {
+                        if (inventory[i].barcode === value) {
+                            order.barcode = _this.inventory[i].barcode;
+                            order.itemId = _this.inventory[i].uniqueid;
+                            order.title = _this.inventory[i].title;
+                            order.quantity = -1;
+                            order.totalQuantity = 1;
+                            order.status = "New Order";
+                            _this.saveOrder(order);
+                            break;
+                        }
+                    }
+                }
+            }, function (err) {
+                console.log("there was an error:" + err);
+            });
+            this.orderNotFound = null;
+        }
+    };
+    OrderComponent.prototype.fetchInventory = function () {
+        var _this = this;
+        this.inventoryService.fetchInventory().subscribe(function (inventory) {
+            _this.inventory = inventory;
+        }, function (err) {
+            console.log("there was an error:" + err);
+        });
+    };
+    OrderComponent.prototype.saveOrder = function (order) {
+        var _this = this;
+        this.orderService.saveOrder(order).subscribe(function (savedOrder) {
+            _this.orderService.setOrder(_this.orders);
+            _this.fetchOrders();
+        }, function (err) {
+            console.log("there was an error:" + err);
+        });
     };
     return OrderComponent;
 }());
@@ -122,7 +182,8 @@ OrderComponent = __decorate([
         selector: 'orders',
         templateUrl: 'views/orders.html'
     }),
-    __metadata("design:paramtypes", [router_1.ActivatedRoute, chat_service_1.ChatService, order_service_1.OrderService, websocket_service_1.WebsocketService])
+    __metadata("design:paramtypes", [router_1.ActivatedRoute, chat_service_1.ChatService, order_service_1.OrderService, websocket_service_1.WebsocketService,
+        inventory_service_1.InventoryService])
 ], OrderComponent);
 exports.OrderComponent = OrderComponent;
 //# sourceMappingURL=order.component.js.map

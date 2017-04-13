@@ -27,6 +27,7 @@ export class OrderComponent {
   isOnOrdersPage: boolean = false;
   isOnCompletedOrders: boolean = false;
   inventoryNotFound: boolean = false;
+  isInOrderList: boolean = false;
   @ViewChild('barcodeInputField') barcodeInput;
 
   constructor(private route: ActivatedRoute, private chatService: ChatService, private orderService: OrderService, private webSocketService: WebsocketService,
@@ -103,13 +104,12 @@ export class OrderComponent {
   }
 
   processBarcode(value) {
-    let isInOrderList = false;
     let tempQuantity = 0;
     let tempTotalQuantity = 0;
-    if (value.length > 0) {
+    if (value.length == 13) {
       for (let i = 0; i < this.orders.length; i++) {
         if (this.orders[i].barcode == value && this.orders[i].status === 'Incomplete') {
-          isInOrderList = true;
+          this.isInOrderList = true;
           if (this.orders[i].quantity > 1) {
               tempQuantity = (this.orders[i].quantity - 1);
               tempTotalQuantity = (this.orders[i].totalQuantity + 1);
@@ -120,62 +120,52 @@ export class OrderComponent {
               break;
           }
         } else {
-          setTimeout(() => {
             this.inputValue = '';
-          }, 500)
+            this.isInOrderList = false;
         }
       }
-      if (!isInOrderList)
+      if (!this.isInOrderList)
         this.processNewOrder(value);
-    } else {
+    } else if (value.length > 13) {
       this.inputValue = '';
     }
-
   }
 
   processNewOrder(value) {
-    if (this.orders.length > 0) {
-      for (let i = 0; i < this.orders.length; i++) {
-        if (this.orders[i].status === 'New Order' && this.orders[i].barcode === value) {
-          return this.updateOrder(this.orders[i].id, 'New Order', this.orders[i].quantity - 1,
-          this.orders[i].totalQuantity + 1);
-          break;
-        }
-      }
-    }
-  this.inventoryService.fetchInventory().subscribe(
-    (inventory) => {
-      this.inventory = inventory;
-      let order = new Order();
-      if (inventory && inventory.length > 0) {
-        for (let i = 0; i < inventory.length; i++) {
-          if (inventory[i].barcode === value) {
-            order.barcode = this.inventory[i].barcode;
-            order.itemId = this.inventory[i].uniqueid;
-            order.title = this.inventory[i].title;
-            order.quantity = -1;
-            order.totalQuantity = 1;
-            order.status = "New Order";
-            this.saveOrder(order);
+    if (value.length == 13) {
+      if (this.orders.length > 0) {
+        for (let i = 0; i < this.orders.length; i++) {
+          if (this.orders[i].status === 'New Order' && this.orders[i].barcode === value) {
+            return this.updateOrder(this.orders[i].id, 'New Order', this.orders[i].quantity - 1,
+            this.orders[i].totalQuantity + 1);
             break;
-          } else {
-            setTimeout(() => {
-              this.inputValue = '';
-            }, 500)
           }
         }
-        if (this.orderNotFound !== 'found') {
-          this.inventoryNotFound = true;
-          setTimeout(() => {
-            this.inventoryNotFound = false;
-          }, 2000)
-        }
       }
-    },
-    (err) => {
-      console.log("there was an error:" + err);
-    });
-    this.orderNotFound = null;
+    this.inventoryService.fetchInventory().subscribe(
+      (inventory) => {
+        this.inventory = inventory;
+        let order = new Order();
+        if (inventory && inventory.length > 0) {
+          for (let i = 0; i < inventory.length; i++) {
+            if (inventory[i].barcode === value) {
+              order.barcode = this.inventory[i].barcode;
+              order.itemId = this.inventory[i].uniqueid;
+              order.title = this.inventory[i].title;
+              order.quantity = -1;
+              order.totalQuantity = 1;
+              order.status = "New Order";
+              this.saveOrder(order);
+              break;
+            }
+          }
+        }
+      },
+      (err) => {
+        console.log("there was an error:" + err);
+      });
+      this.orderNotFound = null;
+    }
   }
 
   fetchInventory() {
