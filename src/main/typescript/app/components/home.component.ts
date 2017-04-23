@@ -27,6 +27,7 @@ export class HomeComponent {
     fetchCount: number = 0;
     inventoryData: Array<Inventory> = [];
     status: string = "Incomplete";
+    searchAndAddOrder: string = '';
 
     //validation
     validateBarcode: boolean = true;
@@ -36,7 +37,8 @@ export class HomeComponent {
 
 
     @ViewChild('fileInput') inputEl: ElementRef;
-    constructor(private chatService: ChatService, private inventoryService: InventoryService, private orderService: OrderService) { }
+    constructor(private chatService: ChatService, private inventoryService: InventoryService,
+      private orderService: OrderService) { }
 
     ngOnInit() {
       this.subscription = this.orderService.order$.subscribe(
@@ -70,6 +72,7 @@ export class HomeComponent {
              this.title = '';
              this.itemId = '';
              this.quantity = null;
+             this.searchAndAddOrder = '';
              this.fetchOrders();
            },
            (err) => {
@@ -99,6 +102,19 @@ export class HomeComponent {
        (err) => {
          console.log("there was an error:" + err);
        });
+   }
+
+   searchAndAddOrderByItemCode(value) {
+     let matchCount = 0;
+     for (let i = 0; i < this.inventory.length; i++) {
+       if (this.inventory[i].uniqueid == value) {
+          matchCount++;
+          this.barcode = this.inventory[i].barcode;
+          this.title = this.inventory[i].title;
+          this.itemId = this.inventory[i].uniqueid
+          break;
+       }
+     }
    }
 
    onchange(event) {
@@ -184,9 +200,9 @@ export class HomeComponent {
     }
 
    validateForm(barcode, itemId, title, quantity) {
-     barcode.length == 0 ? this.validateBarcode = false : this.validateBarcode = true;
-     itemId.length == 0 ? this.validateItemId = false : this.validateItemId = true;
-     title.length == 0 ? this.validateTitle = false : this.validateTitle = true;
-     quantity == 0 ? this.validateQuantity = false : this.validateQuantity = true;
+     barcode.length !== 13 ? this.validateBarcode = false : this.validateBarcode = true;
+     itemId.length === 0 ? this.validateItemId = false : this.validateItemId = true;
+     title.length === 0 ? this.validateTitle = false : this.validateTitle = true;
+     quantity === 0 ? this.validateQuantity = false : this.validateQuantity = true;
    }
 }

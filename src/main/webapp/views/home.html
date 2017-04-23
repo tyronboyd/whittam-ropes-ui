@@ -8,6 +8,7 @@
       <option *ngFor="let item of (inventory | searchInventory:searchBox.value)" [(value)]="item.id">{{item.title}}</option>
     </select>
     <input #searchBox class="search-inventory" type="text" placeholder="Search Inventory..." (keyup)="$event.target.value"/>
+      <input class="search-inventory" type="text" placeholder="Search by Item Code..." (keyup)="searchAndAddOrderByItemCode($event.target.value)"/>
     <input #fileInput class="upload-file" type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." accept=".csv"/>
     <button class="delete-inventory" (click)="deleteInventory()">Delete all inventory</button>
     <button class="delete-orders" (click)="deleteOrders()">Delete all Orders</button>
@@ -15,21 +16,21 @@
   <div class="form-group container-fluid">
     <label for="example-text-input" class="col-md-2 col-form-label">Barcode</label>
     <div class="col-md-10">
-      <input #barcodes class="form-control" type="text" [value]="barcode"/>
+      <input #barcodes [ngModel]="barcode" class="form-control" type="text" [value]="barcode"/>
       <div *ngIf="!validateBarcode">
         <p class="error-message">Please enter a barcode that is 13 numbers long.</p>
       </div>
     </div>
     <label for="example-text-input" class="col-md-2  col-form-label">ItemId</label>
     <div class="col-md-10">
-      <input #itemIds class="form-control" type="text"[value]="itemId" />
+      <input #itemIds [ngModel]="itemId" class="form-control" type="text"[value]="itemId" />
       <div *ngIf="!validateItemId">
         <p class="error-message">Please enter a valid ItemId.</p>
       </div>
     </div>
     <label for="example-text-input" class="col-md-2  col-form-label">Title</label>
     <div class="col-md-10">
-      <input #titles class="form-control" type="text" [value]="title"/>
+      <input #titles [ngModel]="title" class="form-control" type="text" [value]="title"/>
       <div *ngIf="!validateTitle">
         <p class="error-message">Please enter valid title.</p>
       </div>
