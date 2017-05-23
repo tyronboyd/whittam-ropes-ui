@@ -138,7 +138,6 @@ export class OrderComponent {
           if (this.orders[i].status === 'New Order' && this.orders[i].barcode === value) {
             return this.updateOrder(this.orders[i].id, 'New Order', this.orders[i].quantity - 1,
             this.orders[i].totalQuantity + 1);
-            break;
           }
         }
       }
@@ -150,7 +149,7 @@ export class OrderComponent {
           for (let i = 0; i < inventory.length; i++) {
             if (inventory[i].barcode === value) {
               order.barcode = this.inventory[i].barcode;
-              order.itemId = this.inventory[i].uniqueid;
+              order.itemId = this.inventory[i].accountno;
               order.title = this.inventory[i].title;
               order.quantity = -1;
               order.totalQuantity = 1;
@@ -164,7 +163,6 @@ export class OrderComponent {
       (err) => {
         console.log("there was an error:" + err);
       });
-      this.orderNotFound = null;
     }
   }
 

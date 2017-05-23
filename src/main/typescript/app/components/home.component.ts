@@ -107,11 +107,11 @@ export class HomeComponent {
    searchAndAddOrderByItemCode(value) {
      let matchCount = 0;
      for (let i = 0; i < this.inventory.length; i++) {
-       if (this.inventory[i].uniqueid == value) {
+       if (this.inventory[i].accountno == value) {
           matchCount++;
           this.barcode = this.inventory[i].barcode;
           this.title = this.inventory[i].title;
-          this.itemId = this.inventory[i].uniqueid
+          this.itemId = this.inventory[i].accountno
           break;
        }
      }
@@ -124,7 +124,7 @@ export class HomeComponent {
        if (inventory[i].id == id) {
          this.barcode = inventory[i].barcode;
          this.title = inventory[i].title;
-         this.itemId = inventory[i].uniqueid;
+         this.itemId = inventory[i].accountno;
        }
      }
    }
@@ -140,7 +140,7 @@ export class HomeComponent {
                data = $.csv.toObjects(csvData);
                for (let i = 0; i < data.length; i++) {
                  this.inventoryData.push({
-                   uniqueid: data[i].UNIQUEID,
+                   accountno: data[i].ACCOUNTNO,
                    barcode: data[i].BARCODE,
                    title: data[i].TITLE,
                    id: null
@@ -178,6 +178,7 @@ export class HomeComponent {
     }
 
     deleteInventory() {
+      if (confirm('Are you sure you want to delete ALL of the stored inventory?')) {
       this.inventoryService.deleteAllInventory().subscribe(
         (inventory) => {
           console.log('deleted all inventory');
@@ -186,9 +187,11 @@ export class HomeComponent {
         (err) => {
           console.log("there was an error:" + err);
         });
+      }
     }
 
     deleteOrders() {
+      if (confirm('Are you sure you want to delete ALL of the stored inventory?')) {
       this.orderService.deleteAllOrders().subscribe(
         (inventory) => {
           console.log('deleted all orders');
@@ -197,6 +200,7 @@ export class HomeComponent {
         (err) => {
           console.log("there was an error:" + err);
         });
+      }
     }
 
    validateForm(barcode, itemId, title, quantity) {

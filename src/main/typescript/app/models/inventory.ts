@@ -1,6 +1,6 @@
 export class Inventory {
   id: string;
-  uniqueid: string;
+  accountno: string;
   barcode: string;
   title: string;
 }
